@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kevelyn Nails</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-background: #FEF6F8;
+            --color-primary: #FFFFFF;
+            --color-secondary: #FCE4EC;
+            --color-text: #4A4A4A;
+            --color-accent: #D96676;
+            --color-accent-hover: #C25A69;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .bg-accent { background-color: var(--color-accent); }
+        .text-accent { color: var(--color-accent); }
+        .hover\:bg-accent-hover:hover { background-color: var(--color-accent-hover); }
+        .bg-primary { background-color: var(--color-primary); }
+        .bg-secondary { background-color: var(--color-secondary); }
+        .bg-charcoal { background-color: var(--color-text); }
+        .hero-bg {
+            background-image: url('https://i.imgur.com/9j2G0Bs.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+        .nav-link.active {
+            color: var(--color-accent);
+            font-weight: 500;
+        }
+        .masonry-gallery {
+            column-count: 4;
+            column-gap: 1.5rem;
+        }
+        .masonry-item {
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            break-inside: avoid;
+        }
+        @media (max-width: 1024px) { .masonry-gallery { column-count: 3; } }
+        @media (max-width: 768px) { .masonry-gallery { column-count: 2; } }
+        @media (max-width: 640px) { .masonry-gallery { column-count: 1; } }
+        
+        .page-section { display: none; }
+
+        /* Estilos do Agendamento */
+        .calendar-day { transition: all 0.2s ease; }
+        .calendar-day.available:hover { background-color: var(--color-secondary); }
+        .calendar-day.selected { background-color: var(--color-accent); color: white; font-weight: bold; }
+        .time-slot { transition: all 0.2s ease; }
+        .time-slot.available:hover { background-color: var(--color-secondary); }
+        .time-slot.selected { background-color: var(--color-accent); color: white; }
+        .service-item.selected { border-color: var(--color-accent); background-color: var(--color-secondary); }
+
+        /* Animações */
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .interactive-element {
+            transition: all 0.3s ease;
+        }
+        .interactive-element:hover {
+            transform: scale(1.05);
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .button-primary {
+             transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .button-primary:hover {
+            transform: scale(1.05);
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- SEÇÃO INICIAL (VISÍVEL AO CARREGAR) -->
+    <section id="inicio" class="page-section hero-bg h-screen relative">
+        <header class="absolute top-0 left-0 right-0 z-10 py-4 px-6 md:px-10">
+            <div class="container mx-auto flex justify-center items-center relative">
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="nav-button nav-link active text-white hover:text-accent" data-target="inicio">Início</a>
+                    <a href="#" class="nav-button nav-link text-white hover:text-accent" data-target="galeria">Galeria</a>
+                    <a href="#" class="nav-button nav-link text-white hover:text-accent" data-target="agendar">Agendar</a>
+                </nav>
+                <button id="mobile-menu-button-inicio" class="md:hidden text-white text-3xl absolute right-0 top-1/2 -translate-y-1/2">
+                    &#9776;
+                </button>
+            </div>
+            <div id="mobile-menu-inicio" class="hidden md:hidden bg-primary mt-4 rounded-lg shadow-lg">
+                <a href="#" class="nav-button block text-center py-3 text-text hover:bg-secondary" data-target="inicio">Início</a>
+                <a href="#" class="nav-button block text-center py-3 text-text hover:bg-secondary" data-target="galeria">Galeria</a>
+                <a href="#" class="nav-button block text-center py-3 text-text hover:bg-secondary" data-target="agendar">Agendar</a>
+            </div>
+        </header>
+
+        <main class="h-full flex flex-col items-center justify-center text-center text-white">
+            <div class="absolute inset-0 bg-black/50"></div>
+            <div class="relative z-10 p-4 flex flex-col items-center fade-in">
+                <h1 class="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold mb-8">Kevelyn Nails</h1>
+                <a href="#" class="nav-button bg-accent text-white px-8 sm:px-10 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold hover:bg-accent-hover button-primary" data-target="agendar">
+                    Agendar Agora
+                </a>
+            </div>
+        </main>
+    </section>
+
+    <!-- SEÇÃO DA GALERIA (ESCONDIDA) -->
+    <section id="galeria" class="page-section">
+        <header class="bg-primary shadow-md py-4 px-6 md:px-10">
+            <div class="container mx-auto flex justify-center items-center relative">
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="nav-button nav-link text-text hover:text-accent" data-target="inicio">Início</a>
+                    <a href="#" class="nav-button nav-link active text-text hover:text-accent" data-target="galeria">Galeria</a>
+                    <a href="#" class="nav-button bg-accent text-white px-6 py-2 rounded-full hover:bg-accent-hover button-primary" data-target="agendar">Agendar</a>
+                </nav>
+                 <button id="mobile-menu-button-galeria" class="md:hidden text-text text-3xl absolute right-0 top-1/2 -translate-y-1/2">
+                    &#9776;
+                </button>
+            </div>
+             <div id="mobile-menu-galeria" class="hidden md:hidden bg-primary mt-4 rounded-lg shadow-lg">
+                <a href="#" class="nav-button block text-center py-3 text-text hover:bg-secondary" data-target="inicio">Início</a>
+                <a href="#" class="nav-button block text-center py-3 text-text hover:bg-secondary" data-target="galeria">Galeria</a>
+                <a href="#" class="nav-button block text-center py-4 bg-accent text-white font-bold" data-target="agendar">Agendar Agora</a>
+            </div>
+        </header>
+        <main>
+            <section class="py-12 sm:py-20 px-4 sm:px-6 fade-in">
+                <div class="container mx-auto text-center">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">A Minha Arte</h2>
+                    <p class="text-base sm:text-lg text-gray-600 mb-10 sm:mb-12">Inspire-se com alguns dos meus trabalhos recentes.</p>
+                    
+                    <div class="mb-12 bg-white p-6 rounded-lg shadow-lg text-center interactive-element border-t-4 border-accent">
+                        <a href="https://www.instagram.com/kevelyn_nails" target="_blank" class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <svg class="w-10 h-10 text-accent" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919 1.266-.057 1.644-.069 4.85-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z"/></svg>
+                            <div class="text-left sm:text-center">
+                                <p class="font-bold text-lg sm:text-xl text-gray-800">Siga-nos no Instagram!</p>
+                                <p class="text-sm sm:text-base text-gray-600">@kevelyn_nails</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="masonry-gallery">
+                        <div class="masonry-item interactive-element">
+                            <img src="https://i.imgur.com/9j2G0Bs.jpeg" alt="Nail art design" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onclick="openLightbox(this.src, this.alt)">
+                        </div>
+                        <div class="masonry-item interactive-element">
+                            <img src="https://i.imgur.com/SF6XFkZ.jpeg" alt="Nail art design" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onclick="openLightbox(this.src, this.alt)">
+                        </div>
+                        <div class="masonry-item interactive-element">
+                            <img src="https://i.imgur.com/IG5Lw8s.jpeg" alt="Nail art design" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onclick="openLightbox(this.src, this.alt)">
+                        </div>
+                        <div class="masonry-item interactive-element">
+                            <img src="https://i.imgur.com/1N6kzwe.jpeg" alt="Nail art design" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onclick="openLightbox(this.src, this.alt)">
+                        </div>
+                        <div class="masonry-item interactive-element">
+                            <img src="https://i.imgur.com/DHRbn2L.jpeg" alt="Nail art design" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onclick="openLightbox(this.src, this.alt)">
+                        </div>
+                        <div class="masonry-item interactive-element">
+                            <img src="https://i.imgur.com/A4q4FeM.jpeg" alt="Nail art design" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onclick="openLightbox(this.src, this.alt)">
+                        </div>
+                        <div class="masonry-item interactive-element">
+                            <img src="https://i.imgur.com/H6wAy1b.jpeg" alt="Nail art design" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onclick="openLightbox(this.src, this.alt)">
+                        </div>
+                        <div class="masonry-item interactive-element">
+                            <img src="https://i.imgur.com/Gdftz8b.jpeg" alt="Nail art design" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onclick="openLightbox(this.src, this.alt)">
+                        </div>
+                        <div class="masonry-item interactive-element">
+                            <img src="https://i.imgur.com/YcY9ofL.jpeg" alt="Nail art design" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onclick="openLightbox(this.src, this.alt)">
+                        </div>
+                        <div class="masonry-item interactive-element">
+                            <img src="https://i.imgur.com/TlWwRPM.jpeg" alt="Nail art design" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onclick="openLightbox(this.src, this.alt)">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <!-- SEÇÃO DE AGENDAMENTO (ESCONDIDA) -->
+    <section id="agendar" class="page-section">
+        <header class="bg-primary shadow-md py-4 px-6 md:px-10">
+            <div class="container mx-auto flex justify-center items-center relative">
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="nav-button nav-link text-text hover:text-accent" data-target="inicio">Início</a>
+                    <a href="#" class="nav-button nav-link text-text hover:text-accent" data-target="galeria">Galeria</a>
+                    <a href="#" class="nav-button nav-link active text-text hover:text-accent" data-target="agendar">Agendar</a>
+                </nav>
+                <button id="mobile-menu-button-agendar" class="md:hidden text-text text-3xl absolute right-0 top-1/2 -translate-y-1/2">
+                    &#9776;
+                </button>
+            </div>
+            <div id="mobile-menu-agendar" class="hidden md:hidden bg-primary mt-4 rounded-lg shadow-lg">
+                <a href="#" class="nav-button block text-center py-3 text-text hover:bg-secondary" data-target="inicio">Início</a>
+                <a href="#" class="nav-button block text-center py-3 text-text hover:bg-secondary" data-target="galeria">Galeria</a>
+                <a href="#" class="nav-button block text-center py-4 bg-accent text-white font-bold" data-target="agendar">Agendar Agora</a>
+            </div>
+        </header>
+        <main>
+            <section class="py-10 md:py-20 px-4 sm:px-6 fade-in">
+                <div class="container mx-auto max-w-6xl">
+                    <div class="bg-white p-4 sm:p-8 rounded-2xl shadow-lg grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        
+                        <!-- Coluna Esquerda: Passos -->
+                        <div class="lg:col-span-2 order-2 lg:order-1">
+                            <div id="step-container">
+                                <!-- Passo 1: Serviços -->
+                                <div id="step1">
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                                        <h3 class="text-xl sm:text-2xl font-bold text-gray-700 mb-2 sm:mb-0">Qual serviço deseja fazer?</h3>
+                                        <a href="#" id="consult-booking-link" class="text-sm text-accent hover:underline">Já tem um agendamento? Consulte aqui</a>
+                                    </div>
+                                    <div id="services-list" class="space-y-3 max-h-96 overflow-y-auto pr-2"></div>
+                                </div>
+                                <!-- Passo 2: Informações -->
+                                <div id="step2" class="hidden">
+                                    <h3 class="text-xl sm:text-2xl font-bold mb-4 text-gray-700">Coloque as suas informações</h3>
+                                    <div class="space-y-4">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="firstName" class="block text-sm font-medium text-gray-700">Seu nome</label>
+                                                <input type="text" id="firstName" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-accent focus:border-accent">
+                                            </div>
+                                            <div>
+                                                <label for="lastName" class="block text-sm font-medium text-gray-700">Seu sobrenome</label>
+                                                <input type="text" id="lastName" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-accent focus:border-accent">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="phone" class="block text-sm font-medium text-gray-700">Número de celular</label>
+                                            <input type="tel" id="phone" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-accent focus:border-accent">
+                                        </div>
+                                        <button id="btn-to-step3" class="w-full bg-accent text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-accent-hover button-primary">Continuar</button>
+                                    </div>
+                                </div>
+                                <!-- Passo 3: Data e Hora -->
+                                <div id="step3" class="hidden">
+                                    <h3 class="text-xl sm:text-2xl font-bold mb-4 text-gray-700">Escolha uma data e horário</h3>
+                                    <div id="calendar-container"></div>
+                                    <p id="selected-date-text" class="font-semibold my-4 text-center text-lg"></p>
+                                    <div id="time-slots-container" class="grid grid-cols-3 sm:grid-cols-4 gap-2"></div>
+                                </div>
+                                <!-- Passo 4: Confirmação -->
+                                <div id="step4" class="hidden">
+                                    <h3 class="text-xl sm:text-2xl font-bold mb-4 text-gray-700">Confirme o seu agendamento</h3>
+                                    <div class="bg-secondary p-6 rounded-lg space-y-2">
+                                        <div class="flex justify-between"><span class="font-semibold">Serviço:</span> <span id="summary-service"></span></div>
+                                        <div class="flex justify-between"><span class="font-semibold">Preço:</span> <span id="summary-price"></span></div>
+                                        <div class="flex justify-between border-t pt-2 mt-2"><span class="font-semibold">Nome:</span> <span id="summary-name"></span></div>
+                                        <div class="flex justify-between"><span class="font-semibold">Data:</span> <span id="summary-date"></span></div>
+                                        <div class="flex justify-between"><span class="font-semibold">Hora:</span> <span id="summary-time"></span></div>
+                                    </div>
+                                    <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                                        <button id="btn-back-to-step3" class="w-full bg-gray-200 text-gray-700 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-300 interactive-element">Voltar</button>
+                                        <button id="confirm-booking" class="w-full bg-accent text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-accent-hover button-primary">Confirmar</button>
+                                    </div>
+                                </div>
+                                 <!-- Passo 5: Sucesso -->
+                                <div id="step5" class="hidden text-center py-10 fade-in">
+                                     <div class="w-24 h-24 bg-accent/20 rounded-full mx-auto flex items-center justify-center mb-4">
+                                        <svg class="w-12 h-12 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                     </div>
+                                     <h3 class="text-3xl font-bold mb-4 text-accent">Agendamento Confirmado!</h3>
+                                     <p class="text-lg">Obrigada! Os detalhes foram guardados.</p>
+                                     <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                                        <button class="nav-button w-full bg-gray-200 text-gray-700 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-300 interactive-element" data-target="inicio">Voltar ao Início</button>
+                                        <button id="consult-after-booking" class="w-full bg-accent text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-accent-hover button-primary">Consultar Agendamento</button>
+                                     </div>
+                                </div>
+                                <!-- Passo 6: Consultar Agendamento -->
+                                <div id="step6" class="hidden">
+                                     <h3 class="text-xl sm:text-2xl font-bold mb-4 text-gray-700">Consultar Agendamento</h3>
+                                     <div>
+                                        <label for="consult-phone" class="block text-sm font-medium text-gray-700">Seu número de celular</label>
+                                        <input type="tel" id="consult-phone" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-accent focus:border-accent">
+                                     </div>
+                                     <button id="btn-consult" class="mt-4 w-full bg-accent text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-accent-hover button-primary">Consultar</button>
+                                     <div id="consult-result" class="mt-6"></div>
+                                     <button id="back-to-booking" class="mt-4 text-sm text-accent hover:underline">Voltar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coluna Direita: Resumo -->
+                        <div class="lg:col-span-1 bg-secondary rounded-lg p-6 order-1 lg:order-2 h-fit">
+                            <h4 class="text-xl font-bold mb-4 text-center">Resumo</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between"><span>Serviço</span><span id="summary-service-sidebar" class="font-semibold text-right">Nenhum</span></div>
+                                <div class="flex justify-between"><span>Preço Total</span><span id="summary-price-sidebar" class="font-semibold text-right">R$0,00</span></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <!-- RODAPÉ (COMUM A TODAS AS SEÇÕES) -->
+    <footer class="bg-charcoal text-white py-12 px-6">
+        <div class="container mx-auto text-center">
+            <h3 class="text-2xl font-bold mb-2">Kevelyn Nails</h3>
+            <p class="mb-4">Nilópolis, Rio de Janeiro</p>
+            <p class="text-gray-400">&copy; 2024 Kevelyn Nails. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- LIGHTBOX (POP-UP DA IMAGEM) -->
+    <div id="lightbox" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-[100] hidden">
+        <div class="relative bg-white p-2 rounded-lg max-w-4xl w-full max-h-[90vh]">
+            <img id="lightbox-img" src="" alt="Visualização da imagem da galeria" class="w-full h-full object-contain max-h-[calc(90vh-2rem)]">
+            <button id="lightbox-close" class="absolute -top-4 -right-4 bg-white text-text rounded-full h-10 w-10 text-2xl flex items-center justify-center">&times;</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- LÓGICA DE NAVEGAÇÃO ENTRE "PÁGINAS" ---
+            const sections = document.querySelectorAll('.page-section');
+            const navButtons = document.querySelectorAll('.nav-button');
+            const body = document.body;
+
+            function showSection(targetId) {
+                sections.forEach(section => {
+                    section.style.display = (section.id === targetId) ? 'block' : 'none';
+                });
+                body.style.overflow = (targetId === 'inicio') ? 'hidden' : 'auto';
+                window.scrollTo(0, 0);
+            }
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    showSection(targetId);
+                });
+            });
+
+            // --- MENUS MÓVEIS ---
+            const mobileMenus = {
+                'mobile-menu-button-inicio': 'mobile-menu-inicio',
+                'mobile-menu-button-galeria': 'mobile-menu-galeria',
+                'mobile-menu-button-agendar': 'mobile-menu-agendar'
+            };
+            for (const buttonId in mobileMenus) {
+                const button = document.getElementById(buttonId);
+                const menu = document.getElementById(mobileMenus[buttonId]);
+                if (button && menu) {
+                    button.addEventListener('click', () => menu.classList.toggle('hidden'));
+                }
+            }
+            
+            // --- LÓGICA DE AGENDAMENTO ---
+            const steps = [
+                document.getElementById('step1'),
+                document.getElementById('step2'),
+                document.getElementById('step3'),
+                document.getElementById('step4'),
+                document.getElementById('step5'),
+                document.getElementById('step6')
+            ];
+            
+            let booking = {};
+            let allAppointments = []; // Simulação de banco de dados
+
+            const servicesData = [
+                { name: 'Colocação Gel na tips', price: 90 },
+                { name: 'Colocação fibra de vidro', price: 120 },
+                { name: 'Manutenção gel na tips', price: 65 },
+                { name: 'Manutenção fibra de vidro', price: 80 },
+                { name: 'Manutenção banho de gel', price: 60 },
+                { name: 'Pé + mão tradicional simples', price: 37 },
+                { name: 'Manutenção gel+ pé tradicional', price: 85 },
+                { name: 'Mão + pé + spa dos pés', price: 50 },
+                { name: 'Spa dos pés', price: 40 },
+                { name: 'Mão tradicional', price: 25 },
+                { name: 'Pé tradicional', price: 25 }
+            ];
+
+            const servicesListContainer = document.getElementById('services-list');
+            if (servicesListContainer) {
+                servicesData.forEach(service => {
+                    const div = document.createElement('div');
+                    div.className = 'service-item flex justify-between items-center p-4 border-2 border-transparent rounded-lg cursor-pointer hover:bg-secondary transition-colors bg-gray-50';
+                    div.innerHTML = `<span>${service.name}</span><span class="font-bold text-accent">R$${service.price.toFixed(2).replace('.',',')}</span>`;
+                    div.addEventListener('click', () => {
+                        booking.service = service.name;
+                        booking.price = service.price;
+                        document.querySelectorAll('.service-item').forEach(el => el.classList.remove('selected'));
+                        div.classList.add('selected');
+                        updateSummary();
+                        goToStep(1);
+                    });
+                    servicesListContainer.appendChild(div);
+                });
+            }
+            
+            function goToStep(stepIndex) {
+                steps.forEach((step, index) => {
+                    if(step) step.style.display = (index === stepIndex) ? 'block' : 'none';
+                });
+            }
+
+            function updateSummary() {
+                const summaryService = document.getElementById('summary-service-sidebar');
+                const summaryPrice = document.getElementById('summary-price-sidebar');
+                if (summaryService) summaryService.textContent = booking.service || 'Nenhum';
+                if (summaryPrice) summaryPrice.textContent = `R$${(booking.price || 0).toFixed(2).replace('.',',')}`;
+            }
+
+            const btnToStep3 = document.getElementById('btn-to-step3');
+            if (btnToStep3) {
+                btnToStep3.addEventListener('click', () => {
+                    booking.firstName = document.getElementById('firstName').value;
+                    booking.lastName = document.getElementById('lastName').value;
+                    booking.phone = document.getElementById('phone').value;
+                    if (booking.firstName && booking.lastName && booking.phone) {
+                        goToStep(2);
+                        renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+                    } else {
+                        alert('Por favor, preencha todos os seus dados.');
+                    }
+                });
+            }
+            
+            const btnBackToStep3 = document.getElementById('btn-back-to-step3');
+            if (btnBackToStep3) btnBackToStep3.addEventListener('click', () => goToStep(2));
+            
+            const consultBookingLink = document.getElementById('consult-booking-link');
+            if(consultBookingLink) consultBookingLink.addEventListener('click', (e) => { e.preventDefault(); goToStep(5); });
+
+            const backToBooking = document.getElementById('back-to-booking');
+            if(backToBooking) backToBooking.addEventListener('click', (e) => { e.preventDefault(); goToStep(0); });
+            
+            const consultAfterBooking = document.getElementById('consult-after-booking');
+            if(consultAfterBooking) consultAfterBooking.addEventListener('click', (e) => { e.preventDefault(); goToStep(5); });
+
+            let currentDate = new Date();
+
+            function renderCalendar(year, month) {
+                const calendarContainer = document.getElementById('calendar-container');
+                if(!calendarContainer) return;
+
+                const today = new Date();
+                const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+                
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                let calendarHTML = `<div class="p-4 bg-secondary rounded-lg"><div class="flex justify-between items-center mb-4"><button id="prev-month" class="px-2 rounded-full hover:bg-gray-300">&lt;</button><h4 class="text-lg font-bold">${monthNames[month]} ${year}</h4><button id="next-month" class="px-2 rounded-full hover:bg-gray-300">&gt;</button></div><div class="grid grid-cols-7 gap-1 text-center">`;
+                const daysOfWeek = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+                daysOfWeek.forEach(day => calendarHTML += `<div class="font-bold text-xs">${day}</div>`);
+
+                for (let i = 0; i < firstDayOfMonth; i++) calendarHTML += `<div></div>`;
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const currentDayDate = new Date(year, month, day);
+                    const dayOfWeek = currentDayDate.getDay();
+                    const isPast = currentDayDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                    const isSunday = dayOfWeek === 0;
+                    
+                    if (isPast || isSunday) {
+                        calendarHTML += `<div class="p-2 rounded-full text-gray-400 cursor-not-allowed">${day}</div>`;
+                    } else {
+                        calendarHTML += `<div class="calendar-day available p-2 rounded-full cursor-pointer" data-day="${day}">${day}</div>`;
+                    }
+                }
+                calendarHTML += `</div></div>`;
+                calendarContainer.innerHTML = calendarHTML;
+
+                document.getElementById('prev-month').addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() - 1);
+                    renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+                });
+                document.getElementById('next-month').addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                    renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+                });
+
+                document.querySelectorAll('.calendar-day.available').forEach(dayEl => {
+                    dayEl.addEventListener('click', () => {
+                        document.querySelectorAll('.calendar-day.selected').forEach(el => el.classList.remove('selected'));
+                        dayEl.classList.add('selected');
+                        booking.date = new Date(year, month, dayEl.dataset.day);
+                        document.getElementById('selected-date-text').textContent = `Escolha o horário para ${booking.date.toLocaleDateString('pt-BR')}`;
+                        renderTimeSlots();
+                    });
+                });
+            }
+            
+            function renderTimeSlots() {
+                const timeSlotsContainer = document.getElementById('time-slots-container');
+                if(!timeSlotsContainer) return;
+
+                const timeSlots = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00"];
+                const dateKey = booking.date.toLocaleDateString('pt-BR');
+                const bookedSlots = allAppointments.filter(app => app.date === dateKey).map(app => app.time);
+                
+                let slotsHTML = '';
+                timeSlots.forEach(slot => {
+                    if (bookedSlots.includes(slot)) {
+                        slotsHTML += `<div class="p-2 border rounded-lg text-center bg-gray-200 text-gray-400 cursor-not-allowed">${slot}</div>`;
+                    } else {
+                        slotsHTML += `<div class="time-slot available p-2 border rounded-lg cursor-pointer text-center" data-time="${slot}">${slot}</div>`;
+                    }
+                });
+                timeSlotsContainer.innerHTML = slotsHTML;
+
+                document.querySelectorAll('.time-slot.available').forEach(slotEl => {
+                    slotEl.addEventListener('click', () => {
+                        booking.time = slotEl.dataset.time;
+                        
+                        document.getElementById('summary-service').textContent = booking.service;
+                        document.getElementById('summary-price').textContent = `R$${(booking.price || 0).toFixed(2).replace('.',',')}`;
+                        document.getElementById('summary-name').textContent = `${booking.firstName} ${booking.lastName}`;
+                        document.getElementById('summary-date').textContent = booking.date.toLocaleDateString('pt-BR');
+                        document.getElementById('summary-time').textContent = booking.time;
+
+                        goToStep(3);
+                    });
+                });
+            }
+            
+            const confirmBookingBtn = document.getElementById('confirm-booking');
+            if(confirmBookingBtn) {
+                confirmBookingBtn.addEventListener('click', () => {
+                    allAppointments.push({ ...booking, date: booking.date.toLocaleDateString('pt-BR') });
+                    goToStep(4);
+                });
+            }
+            
+            const btnConsult = document.getElementById('btn-consult');
+            if (btnConsult) {
+                btnConsult.addEventListener('click', () => {
+                    const phone = document.getElementById('consult-phone').value;
+                    const resultContainer = document.getElementById('consult-result');
+                    const found = allAppointments.find(app => app.phone === phone);
+
+                    if (found) {
+                        resultContainer.innerHTML = `
+                            <div class="bg-secondary p-4 rounded-lg text-left">
+                                <h4 class="font-bold text-lg mb-2">Seu Agendamento</h4>
+                                <p><strong>Serviço:</strong> ${found.service}</p>
+                                <p><strong>Nome:</strong> ${found.firstName} ${found.lastName}</p>
+                                <p><strong>Data:</strong> ${found.date}</p>
+                                <p><strong>Hora:</strong> ${found.time}</p>
+                            </div>
+                        `;
+                    } else {
+                        resultContainer.innerHTML = `<p class="text-red-500">Nenhum agendamento encontrado para este número.</p>`;
+                    }
+                });
+            }
+
+            function resetBookingProcess() {
+                booking = {};
+                updateSummary();
+                document.querySelectorAll('.service-item').forEach(el => el.classList.remove('selected'));
+                const firstNameInput = document.getElementById('firstName');
+                if (firstNameInput) firstNameInput.value = '';
+                const lastNameInput = document.getElementById('lastName');
+                if (lastNameInput) lastNameInput.value = '';
+                const phoneInput = document.getElementById('phone');
+                if (phoneInput) phoneInput.value = '';
+                const consultPhoneInput = document.getElementById('consult-phone');
+                if (consultPhoneInput) consultPhoneInput.value = '';
+                const consultResult = document.getElementById('consult-result');
+                if (consultResult) consultResult.innerHTML = '';
+                const selectedDateText = document.getElementById('selected-date-text');
+                if (selectedDateText) selectedDateText.textContent = '';
+                const timeSlotsContainer = document.getElementById('time-slots-container');
+                if (timeSlotsContainer) timeSlotsContainer.innerHTML = '';
+                goToStep(0);
+            }
+
+            const newBookingBtn = document.getElementById('new-booking');
+            if (newBookingBtn) newBookingBtn.addEventListener('click', resetBookingProcess);
+
+            // --- LÓGICA DO LIGHTBOX DA GALERIA ---
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxClose = document.getElementById('lightbox-close');
+
+            window.openLightbox = function(src, alt) {
+                if (lightboxImg) {
+                    lightboxImg.src = src;
+                    lightboxImg.alt = alt;
+                }
+                if (lightbox) {
+                    lightbox.classList.remove('hidden');
+                }
+            }
+
+            function closeLightbox() {
+                if (lightbox) {
+                    lightbox.classList.add('hidden');
+                }
+            }
+
+            if(lightboxClose) {
+                lightboxClose.addEventListener('click', closeLightbox);
+            }
+            if(lightbox) {
+                lightbox.addEventListener('click', (e) => {
+                    if (e.target === lightbox) {
+                        closeLightbox();
+                    }
+                });
+            }
+
+            // --- ESTADO INICIAL ---
+            showSection('inicio');
+        });
+    </script>
+</body>
+</html>
