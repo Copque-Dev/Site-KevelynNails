@@ -332,7 +332,24 @@
         </div>
     </div>
 
-    <script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAVSuLXGUw6blgLwnBtczH55kyPqKDQKg",
+          authDomain: "sitegithub-kevelynnails.firebaseapp.com",
+          projectId: "sitegithub-kevelynnails",
+          storageBucket: "sitegithub-kevelynnails.firebaseapp.com",
+          messagingSenderId: "919534989120",
+          appId: "1:919534989120:web:5ac736810f982d01bbd4a5",
+          measurementId: "G-9EXC5WFQFE"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         document.addEventListener('DOMContentLoaded', function() {
             // --- LÓGICA DE NAVEGAÇÃO ENTRE "PÁGINAS" ---
             const sections = document.querySelectorAll('.page-section');
@@ -380,7 +397,7 @@
             ];
             
             let booking = {};
-            let allAppointments = []; // Simulação de banco de dados
+            let allAppointments = []; 
 
             const servicesData = [
                 { name: 'Colocação Gel na tips', price: 90 },
@@ -456,7 +473,14 @@
 
             let currentDate = new Date();
 
-            function renderCalendar(year, month) {
+            async function fetchAppointments() {
+                const q = query(collection(db, "agendamentos"));
+                const querySnapshot = await getDocs(q);
+                allAppointments = querySnapshot.docs.map(doc => doc.data());
+            }
+
+            async function renderCalendar(year, month) {
+                await fetchAppointments();
                 const calendarContainer = document.getElementById('calendar-container');
                 if(!calendarContainer) return;
 
@@ -542,27 +566,39 @@
             
             const confirmBookingBtn = document.getElementById('confirm-booking');
             if(confirmBookingBtn) {
-                confirmBookingBtn.addEventListener('click', () => {
-                    allAppointments.push({ ...booking, date: booking.date.toLocaleDateString('pt-BR') });
-                    goToStep(4);
+                confirmBookingBtn.addEventListener('click', async () => {
+                    try {
+                        const docRef = await addDoc(collection(db, "agendamentos"), {
+                            ...booking,
+                            date: booking.date.toLocaleDateString('pt-BR')
+                        });
+                        console.log("Document written with ID: ", docRef.id);
+                        goToStep(4);
+                    } catch (e) {
+                        console.error("Error adding document: ", e);
+                        alert("Ocorreu um erro ao agendar. Tente novamente.");
+                    }
                 });
             }
             
             const btnConsult = document.getElementById('btn-consult');
             if (btnConsult) {
-                btnConsult.addEventListener('click', () => {
+                btnConsult.addEventListener('click', async () => {
                     const phone = document.getElementById('consult-phone').value;
                     const resultContainer = document.getElementById('consult-result');
-                    const found = allAppointments.find(app => app.phone === phone);
-
-                    if (found) {
+                    
+                    const q = query(collection(db, "agendamentos"), where("phone", "==", phone));
+                    const querySnapshot = await getDocs(q);
+                    
+                    if (!querySnapshot.empty) {
+                        const doc = querySnapshot.docs[0].data();
                         resultContainer.innerHTML = `
                             <div class="bg-secondary p-4 rounded-lg text-left">
                                 <h4 class="font-bold text-lg mb-2">Seu Agendamento</h4>
-                                <p><strong>Serviço:</strong> ${found.service}</p>
-                                <p><strong>Nome:</strong> ${found.firstName} ${found.lastName}</p>
-                                <p><strong>Data:</strong> ${found.date}</p>
-                                <p><strong>Hora:</strong> ${found.time}</p>
+                                <p><strong>Serviço:</strong> ${doc.service}</p>
+                                <p><strong>Nome:</strong> ${doc.firstName} ${doc.lastName}</p>
+                                <p><strong>Data:</strong> ${doc.date}</p>
+                                <p><strong>Hora:</strong> ${doc.time}</p>
                             </div>
                         `;
                     } else {
